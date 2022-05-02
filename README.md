@@ -54,3 +54,4 @@ This repo is a wrapper around the Arcade Learning Environment (ALE) that facilia
 
 1. Python bindings
 2. Allow user to specify json object through constructor if they'd prefer to specify it on CL
+3. Add more error checking logic to json initialization (logic errors or lack of necessary dependent parameters)

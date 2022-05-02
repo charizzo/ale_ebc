@@ -8,11 +8,8 @@
 #include <string>
 #include <SDL.h>
 #include "ale_ebc.hpp"
-//#include <ale_interface.hpp>
-//#include "utils/json_helpers.hpp"
-using namespace std;
 
-//using namespace neuro;
+using namespace std;
 
 typedef std::runtime_error SRE;
 typedef std::logic_error SLE;
@@ -52,8 +49,6 @@ namespace ale_ebc
         ifstream fin;
         json params;
 
-        //clear();
-        
         fin.open("./params/ale.json");
         if(fin.fail()){
             fprintf(stderr,"Couldn't open params file\n");
@@ -258,8 +253,8 @@ namespace ale_ebc
             di.observation = vector <int>(si.screen_rows * si.screen_cols,0); 
         }else{
             for(i = 0; i < (si.screen_rows * si.screen_cols); i++){
-                row = i / si.screen_cols; //You dumb idiot, this should have been 160 from the get go.. THERE ARE 160 COLUMNS GET IT THROUGH YOUR HEAD
-                col = i % si.screen_cols; // ...
+                row = i / si.screen_cols; 
+                col = i % si.screen_cols; 
 
                 current_pxl = (si.input_type == "ebc_simple") ? di.grayscale_output_buffer->at(i) : log(di.grayscale_output_buffer->at(i) + epsilon);
                 previous_pxl = (si.input_type == "ebc_simple") ? di.previous_frame_buffer->at(i) : log(di.previous_frame_buffer->at(i) + epsilon);
@@ -545,8 +540,8 @@ namespace ale_ebc
         
         if (tmpFrameNum != 0){
             for(i = 0; i < (si.screen_rows * si.screen_cols); i++){
-                row = i / si.screen_cols; //You dumb idiot, this should have been 160 from the get go.. THERE ARE 160 COLUMNS GET IT THROUGH YOUR HEAD
-                col = i % si.screen_cols; // ...
+                row = i / si.screen_cols; 
+                col = i % si.screen_cols;
 
                 current_pxl = log(di.grayscale_output_buffer->at(i) + epsilon);
                 previous_pxl = log(di.previous_frame_buffer->at(i) + epsilon); 
