@@ -1,0 +1,20 @@
+{
+    "game_rom":                   "atari_bins/freeway.bin",
+    "display_screen":             false,
+    "sound":                      false,
+    "max_num_frames":             0,
+    "max_num_frames_per_episode": 300, 
+    "color_averaging":            false,
+    "record_screen_dir":          "",
+    "record_sound_filename":      "",
+    "repeat_action_probability":  0,
+    "run_length_encoding":        true,
+    "bias":                       false,
+    "input_type":                 "ebc_simple",
+    "luminance_threshold":        0.05,
+    "screen_rows":                210,
+    "screen_cols":                160,
+    "pixel_refractory":           0.001,
+    "events_file":                "",
+    "verbose":                    false
+  }
