@@ -42,21 +42,27 @@ static json ale_specs = {
 namespace ale_ebc
 {
 
-    /** The constructor simply calls clear() to create an uninitialized class instance. */
+    /** The constructor simply calls from_json() to create an initialized class instance. */
 
     Ale_Ebc::Ale_Ebc()
     {
         ifstream fin;
         json params;
 
-        fin.open("./params/ale.json");
+        fin.open("./params/ale_ebc.json");
         if(fin.fail()){
-            fprintf(stderr,"Couldn't open params file\n");
+            fprintf(stderr,"Ale_Ebc(): Couldn't open params file. Make sure .../ale_ebc/params/ale_ebc.json exists.\n");
             exit(1);
         }
         fin >> params;
         from_json(params);
 
+    }
+
+   /** The constructor simply calls from_json() to create an initialized class instance. */ 
+    Ale_Ebc::Ale_Ebc(const json &j)
+    {
+        from_json(j);
     }
 
     /** clear() sets the instance's state to uninitialized. This is done by setting
@@ -100,7 +106,6 @@ namespace ale_ebc
         si.bias = j["bias"];
         si.input_type = j["input_type"];
         si.verbose = j["verbose"];
-        si.pixel_refractory = j["pixel_refractory"];
         si.events_file = "";
 
         //If doing "ebc" input, luminance_threshold, screen_rows, and screen_cols must be provided
@@ -109,6 +114,7 @@ namespace ale_ebc
             si.luminance_threshold = j["luminance_threshold"];
             si.screen_rows = j["screen_rows"];
             si.screen_cols = j["screen_cols"];
+            si.pixel_refractory = j["pixel_refractory"];
             if(j.contains("events_file")){
                 si.events_file = j["events_file"];
             }
@@ -122,7 +128,7 @@ namespace ale_ebc
             si.screen_cols = 0;
         }else{
             //Make this more detailed
-            throw SRE("from_json() ebc input must have defined luminance_threshold, screen_rows, and screen_cols"); 
+            throw SRE("from_json(): ebc input must have defined luminance_threshold, screen_rows, and screen_cols"); 
         }
         
 
@@ -137,7 +143,6 @@ namespace ale_ebc
         if (di.player_state == UNINIT)
             throw SRE("to_json() called on uninitialized Ale");
 
-        /* Mandatory keys */
         j["display_screen"] = ale.getBool("display_screen");
         j["sound"] = ale.getBool("sound");
         j["max_num_frames"] = ale.getInt("max_num_frames");
@@ -281,7 +286,7 @@ namespace ale_ebc
 
         ale.getScreenGrayscale(*(di.previous_frame_buffer));
         
-        /* Optional Bias Neuron */
+        /* Optional Bias Neuron - This will probably just look like a hot/noisy pixel*/
         if (si.bias)
         {
             di.observation.push_back(1);
@@ -323,7 +328,7 @@ namespace ale_ebc
             di.cached_events.clear();
             make_ebc_observation();
         }else{
-            throw SRE("Invalid observation type specified");
+            throw SRE("reset(): Invalid observation type specified");
         }
 
         observations = di.observation;
@@ -420,6 +425,8 @@ namespace ale_ebc
 
         if (di.player_state == UNINIT)
             throw SRE("reset() called on uninitialized Ale");
+        if (si.input_type != "ebc_log_ti")
+            throw SRE("reset() called with 2D vector and NOT 'ebc_log_ti' observation type is not legal; Change either observation type or the vector to 1D");
 
         seed(_seed);
         ale.loadROM(si.game_rom);
@@ -584,11 +591,10 @@ namespace ale_ebc
         }
 
 
-        /* What do I do here*/
-        /* Optional Bias Neuron */
+        /* Optional Bias Neuron -- This will look like a hot/noisy pixel */
         if (si.bias)
         {
-            di.observation.push_back(1);
+            di.observation_ebc_log_ti.push_back(vector <int>(max_spikes,1));
         }
 
         return;
