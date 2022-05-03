@@ -64,6 +64,7 @@ namespace ale_ebc
     {
     public:
         Ale_Ebc();
+        Ale_Ebc(const json &j);
 
         bool reset(vector<int> &observations, long long _seed);
         bool reset(vector< vector<int> > &observations, long long _seed); //For ebc_log_ti
