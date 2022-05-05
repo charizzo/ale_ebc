@@ -6,7 +6,6 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <SDL.h>
 #include "ale_ebc.hpp"
 
 using namespace std;
@@ -37,7 +36,7 @@ static json ale_specs = {
     {"events_file","S"},
     {"input_type","S"},
     {"verbose","B"},
-    {"Necessary", {"game_rom","display_screen","sound","max_num_frames","max_num_frames_per_episode","color_averaging","record_screen_dir","record_sound_filename","repeat_action_probability","run_length_encoding","input_type"}}};
+    {"Necessary", {"game_rom","display_screen","sound","max_num_frames","max_num_frames_per_episode","color_averaging","record_screen_dir","repeat_action_probability","run_length_encoding","input_type"}}};
 
 namespace ale_ebc
 {
