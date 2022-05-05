@@ -56,7 +56,7 @@ def event_scatter_plot(df, title):
     
 if __name__ == '__main__': 
     parser = argparse.ArgumentParser(description="Event-Based Camera Simulation Scatter Plot")
-    parser.add_argument("--events_file","-e",type=string,required=True)
+    parser.add_argument("--events_file","-e",type=str,required=True)
     args = parser.parse_args()
 
     df = read_txt_ec_data(args.events_file)
