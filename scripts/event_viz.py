@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 import argparse
 
-def read_txt_ec_data(datafile, rounding=2): # 2 when using temporal interpolation. 1 when using discrete frame numbers
+def read_txt_ec_data(datafile, rounding=2):
     timestamps = []
     rows = []
     cols = []
@@ -17,7 +17,7 @@ def read_txt_ec_data(datafile, rounding=2): # 2 when using temporal interpolatio
             polarities.append(int(line.split(",")[3]))
 
     #Hack to prevent plotly axis autozoom
-    timestamps.append(1)
+    timestamps.append(np.min(timestamps))
     cols.append(1)
     rows.append(1)
     polarities.append(-1)

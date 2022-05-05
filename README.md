@@ -19,8 +19,8 @@ This repo is a wrapper around the Arcade Learning Environment (ALE) that facilia
     7. Copy the ALE library into the microapp's lib/ directory: `cp ALE/libale.so lib/`
 2. Install Nlohmann Json
     - Download https://github.com/nlohmann/json/releases/download/v3.10.5/json.hpp 
-        - `mkdir include/nlohmann`
-        - `mv ~/Downloads/json.hpp include/nlohmann`
+        - `mkdir .../ale_ebc/include/nlohmann`
+        - `mv ~/Downloads/json.hpp .../ale_ebc/include/nlohmann`
 3. `make clean ; make`
 
 ## params/ale.json ##
@@ -49,7 +49,8 @@ This repo is a wrapper around the Arcade Learning Environment (ALE) that facilia
 ## Usage/Examples ##
 
 * `./bin/example`
-    * Runs 300 timesteps of instance of Freeway instane. Action 2 (Move up) is hardcoded into "actions" vector (that should probably just be an integer instead of a vector..)
+    * Runs 300 timesteps of instance of Freeway instane. Action 2 (Move up) is hardcoded as the action
+ 
 
 ## Future Work ##
 
