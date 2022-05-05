@@ -18,8 +18,9 @@ This repo is a wrapper around the Arcade Learning Environment (ALE) that facilia
     6. `cd ../..` (`pwd` should be `.../ale_ebc/`)
     7. Copy the ALE library into the microapp's lib/ directory: `cp ALE/libale.so lib/`
 2. Install Nlohmann Json
-    - Download and unzip https://github.com/nlohmann/json/releases/download/v3.10.5/include.zip in `.../ale_ebc/include`
-        - `mv include/include/nlohmann .`
+    - Download https://github.com/nlohmann/json/releases/download/v3.10.5/json.hpp 
+        - `mkdir include/nlohmann`
+        - `mv ~/Downloads/json.hpp include/nlohmann`
 3. `make clean ; make`
 
 ## params/ale.json ##
@@ -31,7 +32,7 @@ This repo is a wrapper around the Arcade Learning Environment (ALE) that facilia
 - `max_num_frames_per_episode`: `300` --  Ends each episode after this number of frames. 0 means never.
 - `color_averaging`: `false` --  Phosphor blends screens to reduce flicker
 - `record_screen_dir`: `""` -- Saves game screen images to save_directory. "" means don't save screenshots.
-- `record_sound_filename`: `""` -- Saves game sound file as a .wav. "" means don't save the game's sound file. There is a known bug with saving and syncing up the sound file with the game's screenshots-turned-video: https://github.com/mgbellemare/Arcade-Learning-Environment/issues/121
+- `record_sound_filename`: `""` -- Saves game sound file as a .wav. "" means don't save the game's sound file. There is a known bug with saving and syncing up the sound file with the game's screenshots-turned-video: https://github.com/mgbellemare/Arcade-Learning-Environment/issues/121; Furthermore, this funcitonality doesn't actually work both on Mac (doens't compile) and Linux (doesn't save .wav file)
 - `repeat_action_probability`: `0` -- Stochasticity in the environment. It is the probability the previous action will repeated without executing the new one.
 - `run_length_encoding`: `true` --  Encodes data using run-length encoding. Used for FIFO only (therefore, unused here)
 - `bias`: `false` -- Implements an input bias neuron to prevent network stagnation (though is is probably not needed..)

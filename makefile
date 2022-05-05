@@ -1,8 +1,6 @@
 APPDIR = .
 ALEDIR = ./ALE
 
-USE_SDL := 1
-
 CFLAGS = -std=c++11 -Wall -Wextra -Wno-deprecated -O3 -I$(APPDIR)/include 
 FLAGS := -I$(ALEDIR)/src -I$(ALEDIR)/src/controllers -I$(ALEDIR)/src/os_dependent -I$(ALEDIR)/src/environment -I$(ALEDIR)/src/external 
 LDFLAGS = ./lib/libale.so
@@ -10,15 +8,6 @@ LDFLAGS = ./lib/libale.so
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
     FLAGS += -Wl,-rpath=$(ALEDIR)
-endif
-#ifeq ($(UNAME_S),Darwin)
-#    FLAGS += -framework Cocoa
-#endif
-
-ifeq ($(strip $(USE_SDL)), 1)
-  DEFINES += -D__USE_SDL -DSOUND_SUPPORT
-  FLAGS += $(shell sdl-config --cflags)
-  LDFLAGS += $(shell sdl-config --libs)
 endif
 
 .PHONY : clean all
