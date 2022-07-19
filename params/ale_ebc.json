@@ -10,11 +10,11 @@
     "repeat_action_probability":  0,
     "run_length_encoding":        true,
     "bias":                       false,
-    "input_type":                 "ebc_simple",
+    "input_type":                 "ebc_log_ti",
     "luminance_threshold":        0.05,
     "screen_rows":                210,
     "screen_cols":                160,
     "pixel_refractory":           0.001,
-    "events_file":                "",
+    "events_file":                "ebc_log_ti_events.txt",
     "verbose":                    false
   }
