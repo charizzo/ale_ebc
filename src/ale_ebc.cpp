@@ -36,7 +36,7 @@ static json ale_specs = {
     {"events_file","S"},
     {"input_type","S"},
     {"verbose","B"},
-    {"Necessary", {"game_rom","display_screen","sound","max_num_frames","max_num_frames_per_episode","color_averaging","record_screen_dir","repeat_action_probability","run_length_encoding","input_type"}}};
+    {"Necessary", {"game_rom","max_num_frames_per_episode","input_type"}}};
 
 namespace ale_ebc
 {
@@ -81,56 +81,118 @@ namespace ale_ebc
 
     void Ale_Ebc::from_json(const json &j)
     {
-        string es, key;
-
-        /* Error check the json.  We do this first before setting any values, so that if there's
-     an error, the class is unmodified. */
-        //Parameter_Check_Json_T(j, ale_specs);
-
-        /* Save static parameters and set others through the ALE interface. */
 
         clear();
 
-        ale.setBool("display_screen", j["display_screen"]);
-        ale.setBool("sound",j["sound"]);
-        ale.setInt("max_num_frames",j["max_num_frames"]);
-        ale.setInt("max_num_frames_per_episode",j["max_num_frames_per_episode"]);
-        ale.setBool("color_averaging", j["color_averaging"]);
-        ale.setString("record_screen_dir",j["record_screen_dir"]);
-        ale.setString("record_sound_filename",j["record_sound_filename"]);
-        ale.setFloat("repeat_action_probability",j["repeat_action_probability"]);
-        ale.setBool("run_length_encoding",j["run_length_encoding"]);
-  
-        si.game_rom = j["game_rom"];
-        si.bias = j["bias"];
-        si.input_type = j["input_type"];
-        si.verbose = j["verbose"];
-        si.events_file = "";
+        // Set some default ALE parameters that might not be specified in file or string json
+        if(j.contains("display_screen"))
+            ale.setBool("display_screen", j["display_screen"]);
+        else   
+            ale.setBool("display_screen", false); 
 
-        //If doing "ebc" input, luminance_threshold, screen_rows, and screen_cols must be provided
-        if(si.input_type.find("ebc") != string::npos && 
-            (j.contains("luminance_threshold") && j.contains("screen_rows") && j.contains("screen_cols"))){
-            si.luminance_threshold = j["luminance_threshold"];
-            si.screen_rows = j["screen_rows"];
-            si.screen_cols = j["screen_cols"];
-            si.pixel_refractory = j["pixel_refractory"];
+        if(j.contains("sound"))
+            ale.setBool("sound",j["sound"]);
+        else
+            ale.setBool("sound",false);
+
+        if(j.contains("max_num_frames"))
+            ale.setInt("max_num_frames",j["max_num_frames"]);
+        else    
+            ale.setInt("max_num_frames",0); 
+        
+        if(j.contains("color_averaging"))
+            ale.setBool("color_averaging", j["color_averaging"]);
+        else
+            ale.setBool("color_averaging", false); 
+        
+        if(j.contains("record_sound_filename"))
+            ale.setString("record_sound_filename",j["record_sound_filename"]);
+        else
+            ale.setString("record_sound_filename",""); 
+
+        if(j.contains("repeat_action_probability"))    
+            ale.setFloat("repeat_action_probability",j["repeat_action_probability"]);
+        else
+            ale.setFloat("repeat_action_probability",false); 
+
+        if(j.contains("run_length_encoding"))
+            ale.setBool("run_length_encoding",j["run_length_encoding"]);
+        else    
+            ale.setBool("run_length_encoding",false);
+
+        if(j.contains("record_screen_dir"))
+            ale.setString("record_screen_dir",j["record_screen_dir"]);
+        else
+            ale.setString("record_screen_dir",""); 
+
+
+        if(j.contains("max_num_frames_per_episode")){
+            ale.setInt("max_num_frames_per_episode",j["max_num_frames_per_episode"]);
+        }else{
+            ale.setInt("max_num_frames_per_episode",300); 
+            cout << "'max_num_frames_per_episode' unspecified; using default value of 300 timesteps per episode." << endl;
+        }
+  
+        if(j.contains("bias"))
+            si.bias = j["bias"];
+        else
+            si.bias = false;
+
+        if(j.contains("verbose"))
+            si.verbose = j["verbose"];
+        else
+            si.verbose = false;
+        
+
+        si.events_file = "";
+        si.game_rom = j["game_rom"];
+        si.input_type = j["input_type"];
+
+        //If doing "ebc", set "luminance_threshold", "screen_rows", "screen_cols", and "pixel_refractory" (for "ebc_log_ti" only)
+        if(si.input_type.find("ebc") != string::npos){
+            if(j.contains("luminance_threshold")){
+                si.luminance_threshold = j["luminance_threshold"];
+            }else{
+                si.luminance_threshold = 0.05; 
+                cout << "'luminance_threshold' unspecified; using default value of 0.05." << endl; 
+            }
+            if(j.contains("screen_rows") && j.contains("screen_cols")){
+                si.screen_rows = j["screen_rows"];
+                si.screen_cols = j["screen_cols"];
+            }else{
+                si.screen_rows = 210;
+                si.screen_cols = 160; 
+                cout << "WARNING: Assuming game_rom screen dimensions of 210 rows x 160 cols. This should work for most game_roms, but there might be exceptions." << endl;
+            }
+            if(j.contains("pixel_refractory"))
+                si.pixel_refractory = j["pixel_refractory"];
+            else
+                si.pixel_refractory = 0.001;
+
             if(j.contains("events_file")){
                 si.events_file = j["events_file"];
+                cout << "Writing simulated events to " << si.events_file << endl;
             }
         }else if(si.input_type.find("screen") != string::npos){
             si.luminance_threshold = 0;
-            si.screen_rows = j["screen_rows"];
-            si.screen_cols = j["screen_cols"];
+            if(j.contains("screen_rows") && j.contains("screen_cols")){
+                si.screen_rows = j["screen_rows"];
+                si.screen_cols = j["screen_cols"];
+            }else{
+                si.screen_rows = 210;
+                si.screen_cols = 160; 
+                cout << "WARNING: Assuming game_rom screen dimensions of 210 rows x 160 cols. This should work for most game_roms, but there might be exceptions." << endl;
+            }
         }else if(si.input_type == "RAM"){       
             si.luminance_threshold = 0;
             si.screen_rows = 0;
             si.screen_cols = 0;
         }else{
             //Make this more detailed
-            throw SRE("from_json(): ebc input must have defined luminance_threshold, screen_rows, and screen_cols"); 
+            throw SRE("from_json(): 'input_type' must be one of: RAM, screen_gray, screen_rgb, ebc_simple, ebc_log, ebc_log_ti"); 
         }
         
-
+        di.reward = 0;
         di.player_state = ALIVE; /* This sets the data structure as initialized. */
     }
 
@@ -323,7 +385,6 @@ namespace ale_ebc
         else if(si.input_type.find("ebc") != string::npos){
             di.grayscale_output_buffer = new vector<unsigned char>(si.screen_rows * si.screen_cols,0);
             di.previous_frame_buffer = new vector<unsigned char>(si.screen_rows * si.screen_cols,0);
-            di.crossings = new vector<double>(si.screen_rows * si.screen_cols,0);
             di.cached_events.clear();
             make_ebc_observation();
         }else{
@@ -376,7 +437,6 @@ namespace ale_ebc
             }else if(si.input_type.find("ebc") != string::npos){
                 delete di.grayscale_output_buffer;
                 delete di.previous_frame_buffer;
-                delete di.crossings;
 
                 if(si.events_file.length() > 0){
                     fout.open(si.events_file,ios::out);
