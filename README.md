@@ -25,8 +25,13 @@ This repo is a wrapper around the Arcade Learning Environment (ALE) that facilia
 
 ## Python Workflow ##
 
-- Need to also grab `https://github.com/pybind/pybind11_json/blob/master/include/pybind11_json/pybind11_json.hpp` and put it in `include/pybind11_json`
-    - Changed file from #include "pybind11/pybind11.h" --> #include <pybind11/pybind11.h>
+If you choose to use the python bindings, you will also need to download the following header file that enables translation between python json and nlohmann::json
+- Download `https://github.com/pybind/pybind11_json/blob/master/include/pybind11_json/pybind11_json.hpp` and store it in `include/pybind11_json/`
+    - In the header file, you might need to modify `#include "pybind11/pybind11.h"` to `#include <pybind11/pybind11.h>`
+
+## Atari Rom Files ##
+
+The atari bins needed to run the library are not distributed with the ale_ebc library. However, they can be downloaded from here: http://www.atarimania.com/top-atari-atari-2600-vcs-_G_2_7.html 
 
 ## params/ale_ebc.json ##
 
