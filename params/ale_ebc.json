@@ -1,5 +1,5 @@
 {
-    "game_rom":                   "atari_bins/freeway.bin",
+    "game_rom":                   "atari_bins/tennis.bin",
     "display_screen":             false,
     "sound":                      false,
     "max_num_frames":             0,
@@ -15,6 +15,6 @@
     "screen_rows":                210,
     "screen_cols":                160,
     "pixel_refractory":           0.001,
-    "events_file":                "ebc_log_ti_events.txt",
+    "events_file":                "ebc_log_ti_tennis.txt",
     "verbose":                    false
   }

@@ -13,7 +13,7 @@ int main(){
     action = 2;
 
     /*Construct and initialize ALE object with json of required params*/
-    test = new Ale_Ebc({{"game_rom","atari_bins/freeway.bin"},{"max_num_frames_per_episode",300},{"input_type","ebc_log"}});
+    test = new Ale_Ebc({{"game_rom","atari_bins/freeway.bin"},{"max_num_frames_per_episode",1000},{"input_type","ebc_log"},{"events_file","ebc_log_freeway_t1.txt"},{"luminance_threshold",0.05}});
 
     /*Let user seed the run by passing a seed to reset along with observations vector for initialization*/
     test->reset(observations,2098);
